@@ -40,7 +40,7 @@ const getFixtures = async (req, res) => {
     try {
         const existingFixtures = await Fixture.findOne({
             'parameters.league': '203',
-            'parameters.season': '2023'
+            'parameters.season': '2024'
         });
 
         if (existingFixtures) {
