@@ -38,8 +38,10 @@ const saveStandings = async (data) => {
 
 const getFixtures = async (req, res) => {
     try {
+        const leagueId = req.params.league;
+        
         const existingFixtures = await Fixture.findOne({
-            'parameters.league': '203',
+            'parameters.league': leagueId,
             'parameters.season': '2024'
         });
 
@@ -48,7 +50,7 @@ const getFixtures = async (req, res) => {
         }
 
         const response = await fetch(
-            `https://v3.football.api-sports.io/fixtures?season=2024&league=203`,
+            `https://v3.football.api-sports.io/fixtures?season=2024&league=${leagueId}`,
             {
                 method: 'GET',
                 headers: {
