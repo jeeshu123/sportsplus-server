@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
-
 const RaceFixtureSchema = new mongoose.Schema({
 	parameters: {
-        season: { type: String, required: true },
-        type:String
+        season: { type: Number, required: true },
+        type: { type: String, required: true }
     },
     response: [
     	{
@@ -23,25 +22,26 @@ const RaceFixtureSchema = new mongoose.Schema({
     			image:String,
     		},
     		season:Number,
-            type:String,
+            type:{ type: String, required: true },
             laps:{
-                current:Number,
+                current:{ type: Number, default: null },
                 total:Number,
             },
             fastest_lap:{
                 driver:{
-                    id:Number,
+                    id:{ type: Number, default: null },
                 },
-                time:String,
+                time:{ type: String, default: null },
             },
     		distance:String,
             timezone:String,
             date:String,
-            weather:String,
+            weather:{ type: String, default: null },
             status:String,
-    	},
+            flag:{ type: String, default: null}
+    	}
             
-    ],
+    ]
 })
 
 const RaceFixture = mongoose.model('Race Fixture', RaceFixtureSchema);
