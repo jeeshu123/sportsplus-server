@@ -38,7 +38,7 @@ const saveRaceFixture = async (data) => {
 
         await raceFixtureData.save();
     } catch (error) {
-        console.error('Error saving driver rankings:', error);
+        console.error('Error saving race fixture:', error);
     }
 };
 
@@ -126,10 +126,19 @@ const getDriverRankings = async (req,res)=>{
 
 const getRaceFixtures = async (req,res)=>{
 	try{
+        	const {season} = req.query;
+        	const existingRaceFixtures = await RaceFixture.findOne({
+            		'parameters.type': "race",
+            		'parameters.season': season
+        	});
 
+        	if (existingRaceFixtures) {
+            		// console.log("Found")
+            		return res.json(existingRaceFixtures);
+        	}
 		
 		const response = await fetch(
-            `https://v1.formula-1.api-sports.io/races?season=2023&type=race`,
+            `https://v1.formula-1.api-sports.io/races?season=${season}&type=race`,
             {
                 method: 'GET',
                 headers: {
@@ -143,9 +152,25 @@ const getRaceFixtures = async (req,res)=>{
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-
-
         const data = await response.json();
+
+        data.response = await Promise.all(
+            data.response.map(async (race) => {
+                const country = race.competition.location.country;
+                if (!country) return race;
+
+                async function fetchLogo(country) {
+                    const res = await fetch(`https://restcountries.com/v3.1/name/${country}`);
+                    const data = await res.json();
+                    if (data && data.length > 0) return data[0].flags.png;
+                    return null;
+                }
+
+                const flag = await fetchLogo(country);
+
+                return { ...race, flag };
+            })
+        );
 
         await saveRaceFixture(data)
 
