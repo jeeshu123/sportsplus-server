@@ -76,9 +76,10 @@ const getFixtures = async (req, res) => {
 
 const getStandings = async (req,res)=>{
     try{
+        const {league,season}=req.query;
         const existingStanding = await League.findOne({
-            'id': '203',
-            'season': '2023'
+            'id': league,
+            'season': season
         });
 
         if (existingStanding) {
@@ -86,7 +87,7 @@ const getStandings = async (req,res)=>{
         }
 
         const response = await fetch(
-            `https://v3.football.api-sports.io/standings?league=203&season=2023`,
+            `https://v3.football.api-sports.io/standings?league=${league}&season=${season}`,
             {
                 method: 'GET',
                 headers: {
