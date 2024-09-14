@@ -7,22 +7,23 @@ const dotenv = require("dotenv");
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-require('dotenv').config()
+require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
-const footballRoute = require("./routes/footballRoute")
-const formula1Route = require("./routes/formula1Route")
+const footballRoute = require("./routes/footballRoute");
+const formula1Route = require("./routes/formula1Route");
+const userRoute = require("./routes/userRoute");
 
 app.get("/", (req, res) => {
   res.json({ status: "up" });
 });
 
-app.use("/api/football",footballRoute)
-app.use("/api/formula1",formula1Route)
+app.use("/api/users", userRoute);
+app.use("/api/football", footballRoute);
+app.use("/api/formula1", formula1Route);
 
-const mongoDB =
-  `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@sportsplus.vs4cy.mongodb.net/?retryWrites=true&w=majority&appName=sportsplus`;
+const mongoDB = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@sportsplus.vs4cy.mongodb.net/?retryWrites=true&w=majority&appName=sportsplus`;
 
 mongoose
   .connect(mongoDB)
