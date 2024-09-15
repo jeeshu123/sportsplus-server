@@ -22,12 +22,14 @@ const createSendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
   };
+    console.log("Okay 2");
+
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
-
+  console.log("Okay 3");
   res.status(statusCode).json({
     status: "Success",
     token,
@@ -38,14 +40,21 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signUp = CatchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password,
-  });
+  try {
+    const newUser = await User.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+    });
 
-  createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, res);
+  } catch (error) {
+    if (error.code === 11000 && error.keyValue.email) {
+      return next(new AppError("This email is already registered. Please log in or use a different email.", 400));
+    }
+    return next(error); 
+  }
 });
 
 exports.login = CatchAsync(async (req, res, next) => {
