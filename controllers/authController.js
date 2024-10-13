@@ -22,8 +22,7 @@ const createSendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
   };
-    console.log("Okay 2");
-
+  console.log("Okay 2");
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
@@ -46,14 +45,20 @@ exports.signUp = CatchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       email: req.body.email,
       password: req.body.password,
+      userPreference: req.body.userPreference,
     });
 
     createSendToken(newUser, 201, res);
   } catch (error) {
     if (error.code === 11000 && error.keyValue.email) {
-      return next(new AppError("This email is already registered. Please log in or use a different email.", 400));
+      return next(
+        new AppError(
+          "This email is already registered. Please log in or use a different email.",
+          400
+        )
+      );
     }
-    return next(error); 
+    return next(error);
   }
 });
 
@@ -67,7 +72,7 @@ exports.login = CatchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect Email or Password", 401));
   }
-  
+
   createSendToken(user, 200, res);
 });
 
