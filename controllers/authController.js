@@ -45,7 +45,7 @@ exports.signUp = CatchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       email: req.body.email,
       password: req.body.password,
-      userPreference: req.body.userPreference,
+      userPreference: { football: 300, f1: 200 },
     });
 
     createSendToken(newUser, 201, res);
