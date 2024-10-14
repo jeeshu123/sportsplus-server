@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
+const preferredSportSchema = new mongoose.Schema({
+  sport: { type: String, required: true },
+  timeSpent: { type: Number, default: 0 },
+});
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -27,6 +32,7 @@ const userSchema = new mongoose.Schema({
   },
   // days: Array,
   userPreference: Object,
+  preferredSports: { type: [preferredSportSchema], required: true },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
