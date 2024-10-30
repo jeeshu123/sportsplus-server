@@ -85,7 +85,7 @@ const getStandings = async (req, res) => {
       season: season,
     });
 
-    if (existingStanding) {
+    if (existingStanding && season !== "2024") {
       return res.json(existingStanding);
     }
 
