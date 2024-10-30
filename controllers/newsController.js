@@ -50,13 +50,13 @@ const getBreakingNews = async (req, res) => {
     const articles = await NewsArticle.find({ tags: topic });
     // res.json(articles);
     const response = await fetch(
-      `https://gnews.io/api/v4/top-headlines?category=sports&lang=en&max=100&apikey=${process.env.GNEWS_API_KEY}&q=top news in ${topic}`
+      `https://gnews.io/api/v4/top-headlines?category=sports&lang=en&max=100&apikey=${process.env.GNEWS_API_KEY}&q=${topic}`
     );
     const data = await response.json();
     if (response.ok) {
       saveArticlesWithKeyword(data.articles, topic);
     }
-    res.json(data);
+    res.json(data.articles);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

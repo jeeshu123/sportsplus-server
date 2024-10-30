@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Define the schema for a news article
 const newsArticleSchema = new mongoose.Schema({
   title: {
     type: String,
